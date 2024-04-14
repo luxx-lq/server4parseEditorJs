@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor.js Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+</head>
+<body>
+<div id="editorjs"></div>
+<script>
+    var editor = new EditorJS({
+        holder: 'editorjs',
+        readOnly: true,
+        tools: {
+            header: {
+                class: Header,
+                inlineToolbar: ['link'],
+                config: {
+                    placeholder: 'Enter a header',
+                    levels: [1, 2, 3, 4],
+                    defaultLevel: 3
+                }
+            },
+            paragraph: {
+                class: Paragraph,
+                inlineToolbar: true
+            }
+        },
+        data: {
+            "time": 1713103028165,
+            "blocks": [
+                {
+                    "id": "a2aEQyzvPf",
+                    "type": "header",
+                    "data": {
+                        "text": "序 言",
+                        "level": 3
+                    }
+                }
+            ],
+            "version": "2.29.1"
+        }
+    });
+</script>
+</body>
+</html>

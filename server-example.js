@@ -5,8 +5,12 @@ const app = express();
 const hostname = '127.0.0.1';
 const port = 8999;
 const host = hostname + ':' + port;
+const crypto = require('crypto');
 
-app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.urlencoded({extended: false}));
+//增加请求体限制
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+app.use(bodyParser.json({ limit: '100mb' }));
 
 
 const options = {
@@ -14,6 +18,16 @@ const options = {
     resources: "usable",
     pretendToBeVisual: true,
     includeNodeLocations: true,
+    beforeParse(window) {
+        window.crypto = crypto;
+        window.matchMedia = window.matchMedia || function() {
+            return {
+                matches: false,
+                addListener: function() {},
+                removeListener: function() {}
+            };
+        };
+    }
 };
 
 const {JSDOM} = jsdom;
@@ -72,7 +86,7 @@ const {window} = new JSDOM(`
 window.blocks = null
 
 app.post('/html2blocks', function (req, res) {
-    if (window.editor) {
+        if (window.editor) {
         if (req.body.html) {
             window.editor.blocks.renderFromHTML(req.body.html);
             window.editor.save().then(data => {
@@ -80,10 +94,12 @@ app.post('/html2blocks', function (req, res) {
                 res.end(JSON.stringify(data))
             })
         } else {
-            res.end({code: -5, data: 'param error'})
+            // res.end({code: -5, data: 'param error'})
+            res.end(JSON.stringify({code: -5, data: 'param error'}));  // 这里也要使用 JSON.stringify()
         }
     } else {
-        res.end({code: -7, data: 'editor init failed'})
+        // res.end({code: -7, data: 'editor init failed'})
+        res.end(JSON.stringify({code: -7, data: 'editor init failed'}));  // 同上
     }
 })
 
@@ -93,3 +109,6 @@ app.listen(port, hostname, function () {
     console.log(`server run at http://${host}`);
 
 });
+
+//git 地址
+//Is there any library convert html to block of editorjs, or convert block to html #1232
